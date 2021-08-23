@@ -158,6 +158,25 @@ void Voz::actualizarDuracion()
     m_duracion = tiempoAcumulado;
 }
 
+double Voz::samplearEnvolvente(double tiempo, double duracionTotal)
+{
+    double amplitud = 0.0;
+
+    if (tiempo <= m_envolvente.tiempoAtaque)
+        amplitud = (tiempo / m_envolvente.tiempoAtaque) * m_envolvente.nivelAtaque;
+    else if (tiempo > m_envolvente.tiempoAtaque && tiempo <= m_envolvente.tiempoAtaque + m_envolvente.tiempoDecaer)
+        amplitud = ((tiempo - m_envolvente.tiempoAtaque) / m_envolvente.tiempoDecaer) * (m_envolvente.nivelSostener - m_envolvente.nivelAtaque) + m_envolvente.nivelAtaque;
+    else if (tiempo <= duracionTotal - m_envolvente.tiempoSoltar)
+        amplitud = m_envolvente.nivelSostener;
+    else if (tiempo <= duracionTotal)
+        amplitud = (1.0 - (tiempo - (duracionTotal - m_envolvente.tiempoSoltar)) / m_envolvente.tiempoSoltar) * m_envolvente.nivelSostener;
+
+    if (amplitud < 0.005)
+        amplitud = 0.0;
+
+    return amplitud;
+}
+
 void Voz::producirRaw(string nombre)
 {
     const int bitrate = 44100;
@@ -185,10 +204,12 @@ void Voz::producirRaw(string nombre)
             eventoIndex++;
             duracion = m_eventos[eventoIndex].duracion(m_pulso);
         }
+        if (eventoIndex >= m_eventos.size())
+            break;
         if (m_eventos[eventoIndex].esSilencio())
             sample = 0.0;
         else
-            sample = m_eventos[eventoIndex].acorde()->sample(t, m_armonicos);
+            sample = m_eventos[eventoIndex].acorde()->sample(t, m_armonicos) * samplearEnvolvente(t, duracion);
         archivo.write((char *)&sample, sizeof(double));
         t += step;
     }

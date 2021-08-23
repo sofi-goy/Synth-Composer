@@ -71,6 +71,15 @@ public:
     double mejorDuracion(double duracionPedida);
 };
 
+typedef struct Envolvente {
+        double tiempoAtaque = 0.1;
+        double tiempoDecaer = 0.1;
+        double tiempoSoltar = 0.2;
+
+        double nivelSostener = 0.9;
+        double nivelAtaque = 1.0;
+} Envolvente;
+
 class Evento
 {
 private:
@@ -100,15 +109,19 @@ private:
     double m_duracion = 0;
     void actualizarDuracion();
 
+    Envolvente m_envolvente;
+
 public:
     Voz(vector<Evento> eventos);
     vector<Evento> eventos() { return m_eventos; }
 
     void setearPulso(int pulso);
     void setearArmonicos(int n) { m_armonicos = n; }
+    void setearEnvolvente(Envolvente envolvente) { m_envolvente = envolvente; }
     void agregar(Evento evento);
     void agregarEn(Evento evento, int index);
 
+    double samplearEnvolvente(double tiempo, double duracionTotal);
     void producirRaw(string nombre);
 
     double duracion() { return m_duracion; }
