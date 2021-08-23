@@ -97,21 +97,19 @@ vector<Nota> Acorde::notas()
 double Acorde::sample(double t)
 {
     double sample = 0;
-    for (int i = 0; i < notas().size(); i++){
+    for (int i = 0; i < notas().size(); i++)
+    {
         sample += notas()[i].sample(t) / notas().size();
     }
-    // sample = m_base.sample(t);
     return sample;
 }
 
 double Acorde::mejorDuracion(double duracionPedida)
 {
     double mejorDuracion = 0.0;
-    for (Nota nota : notas()){
+    for (Nota nota : notas())
         mejorDuracion += round(nota.frecuencia() * duracionPedida) / nota.frecuencia();
-        cout << round(nota.frecuencia() * duracionPedida) / nota.frecuencia() << " ";
-    }
-    cout << endl << "=====" << endl;
+
     return mejorDuracion / notas().size();
 }
 
@@ -174,7 +172,8 @@ void Voz::producirRaw(string nombre)
 
     for (int i = 0; i < samples; i++)
     {
-        if (t >= duracion){
+        if (t >= duracion)
+        {
             t -= duracion;
             eventoIndex++;
             duracion = m_eventos[eventoIndex].duracion(m_pulso);
