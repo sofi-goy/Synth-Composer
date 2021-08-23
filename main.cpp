@@ -29,5 +29,6 @@ int main()
     }
 
     melodia.setearPulso(60);
+    melodia.setearArmonicos(4);
     melodia.producirRaw("music.bin");
 }

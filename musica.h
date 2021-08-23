@@ -49,7 +49,7 @@ public:
 
     int id();
     double frecuencia();
-    double sample(double t);
+    double sample(double t, int armonicos);
 };
 
 class Acorde
@@ -67,7 +67,7 @@ public:
     string nombre();
     Nota base() { return m_base; }
 
-    double sample(double t);
+    double sample(double t, int armonicos);
     double mejorDuracion(double duracionPedida);
 };
 
@@ -96,6 +96,7 @@ class Voz
 private:
     vector<Evento> m_eventos;
     int m_pulso = 60;
+    int m_armonicos = 5;
     double m_duracion = 0;
     void actualizarDuracion();
 
@@ -104,6 +105,7 @@ public:
     vector<Evento> eventos() { return m_eventos; }
 
     void setearPulso(int pulso);
+    void setearArmonicos(int n) { m_armonicos = n; }
     void agregar(Evento evento);
     void agregarEn(Evento evento, int index);
 

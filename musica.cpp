@@ -63,9 +63,17 @@ string Nota::nombre()
     return notas[(int)m_nota] + to_string(m_octava);
 }
 
-double Nota::sample(double t)
+double Nota::sample(double t, int armonicos)
 {
-    return sin(t * 2.0 * M_PI * frecuencia());
+    double sample = 0;
+    double amplitud = 0.5;
+    for (int i = 1; i <= armonicos; i++)
+    {
+        sample += amplitud * sin(t * 2.0 * M_PI * frecuencia() * i);
+        amplitud /= 2.0;
+    }
+
+    return sample;
 }
 
 Acorde::Acorde(Nota base, bool menor, bool septima, bool septimaMenor)
@@ -94,14 +102,13 @@ vector<Nota> Acorde::notas()
     return basico;
 }
 
-double Acorde::sample(double t)
+double Acorde::sample(double t, int armonicos)
 {
     double sample = 0;
-    for (int i = 0; i < notas().size(); i++)
-    {
-        sample += notas()[i].sample(t) / notas().size();
-    }
-    return sample;
+    for (Nota nota : notas())
+        sample += nota.sample(t, armonicos);
+    // sample = m_base.sample(t,armonicos);
+    return sample / notas().size();
 }
 
 double Acorde::mejorDuracion(double duracionPedida)
@@ -181,7 +188,7 @@ void Voz::producirRaw(string nombre)
         if (m_eventos[eventoIndex].esSilencio())
             sample = 0.0;
         else
-            sample = m_eventos[eventoIndex].acorde()->sample(t);
+            sample = m_eventos[eventoIndex].acorde()->sample(t, m_armonicos);
         archivo.write((char *)&sample, sizeof(double));
         t += step;
     }
