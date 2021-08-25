@@ -162,16 +162,21 @@ double Voz::samplearEnvolvente(double tiempo, double duracionTotal)
 {
     double amplitud = 0.0;
 
+    // Ataque
     if (tiempo <= m_envolvente.tiempoAtaque)
         amplitud = (tiempo / m_envolvente.tiempoAtaque) * m_envolvente.nivelAtaque;
+    // Decaer
     else if (tiempo > m_envolvente.tiempoAtaque && tiempo <= m_envolvente.tiempoAtaque + m_envolvente.tiempoDecaer)
         amplitud = ((tiempo - m_envolvente.tiempoAtaque) / m_envolvente.tiempoDecaer) * (m_envolvente.nivelSostener - m_envolvente.nivelAtaque) + m_envolvente.nivelAtaque;
+    // Sostener
     else if (tiempo <= duracionTotal - m_envolvente.tiempoSoltar)
         amplitud = m_envolvente.nivelSostener;
+    // Soltar
     else if (tiempo <= duracionTotal)
         amplitud = (1.0 - (tiempo - (duracionTotal - m_envolvente.tiempoSoltar)) / m_envolvente.tiempoSoltar) * m_envolvente.nivelSostener;
 
-    if (amplitud < 0.005)
+    // Descartar el final del Soltar
+    if (amplitud < 0.0005)
         amplitud = 0.0;
 
     return amplitud;

@@ -18,6 +18,7 @@ enum Cifrado
     AS,
     B
 };
+
 enum Figura
 {
     Redonda = 16,
@@ -32,7 +33,7 @@ class Nota
 private:
     Cifrado m_nota;
     int m_octava;
-    double semitono = 1.059463094;
+    double semitono = 1.0594630943592952645618252949463417007792043174941856285592084314;
 
 public:
     Nota() {}
@@ -71,13 +72,14 @@ public:
     double mejorDuracion(double duracionPedida);
 };
 
-typedef struct Envolvente {
-        double tiempoAtaque = 0.1;
-        double tiempoDecaer = 0.1;
-        double tiempoSoltar = 0.2;
+typedef struct Envolvente
+{
+    double tiempoAtaque = 0.1;
+    double tiempoDecaer = 0.01;
+    double tiempoSoltar = 0.2;
 
-        double nivelSostener = 0.9;
-        double nivelAtaque = 1.0;
+    double nivelSostener = 0.8;
+    double nivelAtaque = 1.0;
 } Envolvente;
 
 class Evento
