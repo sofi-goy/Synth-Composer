@@ -17,24 +17,24 @@ int main()
 {
     LineaMusical melodia = LineaMusical({});
 
-    Nota nota = Nota(Cifrado::A, 2, Figura::Blanca);
+    Nota nota = Nota(Cifrado::C, 2, Figura::Blanca);
     Acorde* acorde;
 
     for (int i = 0; i < 8; i++)
     {
-        acorde = mayor(nota);
+        acorde = menor(nota);
         melodia.agregar(acorde);
         nota = nota.tercera();
     }
 
     Envolvente env = Envolvente();
-    env.tiempoAtaque = 0.1;
-    env.tiempoDecaer = 0.02;
-    env.tiempoSoltar = 0.2;
+    env.tiempoAtaque = 0.2;
+    env.tiempoDecaer = 0.05;
+    env.tiempoSoltar = 0.25;
     env.nivelSostener = 0.75;
     melodia.setearEnvolvente(env);
 
+    melodia.setearArmonicos({1.0/4,1.0/2,1.0/4});
     melodia.setearPulso(60);
-    melodia.setearArmonicos(10);
     melodia.producirRaw("music.bin");
 }

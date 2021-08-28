@@ -72,14 +72,14 @@ string Nota::nombre()
     return notas[(int)m_nota] + to_string(m_octava);
 }
 
-double Nota::sample(double t, int armonicos)
+double Nota::sample(double t, Armonicos armonicos)
 {
     double sample = 0;
-    double amplitud = 0.5;
-    for (int i = 1; i <= armonicos; i++)
+    int i = 1;
+    for (double amplitud : armonicos)
     {
         sample += amplitud * sin(t * 2.0 * M_PI * frecuencia() * i);
-        amplitud /= 2;
+        i++;
     }
 
     return sample;
@@ -118,7 +118,7 @@ vector<Nota> Acorde::notas()
     return basico;
 }
 
-double Acorde::sample(double t, int armonicos)
+double Acorde::sample(double t, Armonicos armonicos)
 {
     double sample = 0;
     for (Nota nota : notas())
@@ -136,13 +136,13 @@ double Acorde::duracion(int pulso)
     return mejorDuracion / notas().size();
 }
 
-LineaMusical::LineaMusical(vector<Evento*> eventos)
+LineaMusical::LineaMusical(vector<Evento *> eventos)
 {
     m_eventos = eventos;
     actualizarDuracion();
 }
 
-void LineaMusical::agregar(Evento* evento)
+void LineaMusical::agregar(Evento *evento)
 {
     m_eventos.push_back(evento);
     m_duracion += evento->duracion(m_pulso);
@@ -157,7 +157,7 @@ void LineaMusical::setearPulso(int pulso)
 void LineaMusical::actualizarDuracion()
 {
     m_duracion = 0;
-    for (Evento* evento : m_eventos)
+    for (Evento *evento : m_eventos)
         m_duracion += evento->duracion(m_pulso);
 }
 

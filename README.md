@@ -25,6 +25,6 @@ Para probarlo (en Linux), hay que ejecutar el comando
 
 - Implementar instrumentos básicos (piano, sinte, percusión, guitarra, bajo, cuerdas, saxo)
 - Usar distintos tipos de ondas (cuadradas, triangulares, serrucho) para emular consolas retro
-- Permitir mayor personalización de los armónicos
+- ~~Permitir mayor personalización de los armónicos~~
 - Producir audios en formato WAV
 - Leer formato WAV, y permitir samplear grabaciones
