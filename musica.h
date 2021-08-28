@@ -1,3 +1,5 @@
+#pragma once
+
 #include <string>
 #include <vector>
 
@@ -28,12 +30,13 @@ enum Figura
     Semicorchea = 1
 };
 
+double const semitono = 1.0594630943592952645618252949463417007792043174941856285592084314;
+
 class Nota
 {
 private:
     Cifrado m_nota;
     int m_octava;
-    double semitono = 1.0594630943592952645618252949463417007792043174941856285592084314;
 
 public:
     Nota() {}
