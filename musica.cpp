@@ -70,7 +70,7 @@ double Nota::sample(double t, int armonicos)
     for (int i = 1; i <= armonicos; i++)
     {
         sample += amplitud * sin(t * 2.0 * M_PI * frecuencia() * i);
-        amplitud /= 2.0;
+        amplitud /= 2;
     }
 
     return sample;
@@ -107,7 +107,6 @@ double Acorde::sample(double t, int armonicos)
     double sample = 0;
     for (Nota nota : notas())
         sample += nota.sample(t, armonicos);
-    // sample = m_base.sample(t,armonicos);
     return sample / notas().size();
 }
 
@@ -150,12 +149,9 @@ void Voz::setearPulso(int pulso)
 
 void Voz::actualizarDuracion()
 {
-    double tiempoAcumulado = 0;
-    for (int i = 0; i < m_eventos.size(); i++)
-    {
-        tiempoAcumulado += m_eventos[i].duracion(m_pulso);
-    }
-    m_duracion = tiempoAcumulado;
+    m_duracion = 0;
+    for (Evento evento : m_eventos)
+        m_duracion += evento.duracion(m_pulso);
 }
 
 double Voz::samplearEnvolvente(double tiempo, double duracionTotal)
@@ -194,29 +190,27 @@ void Voz::producirRaw(string nombre)
         return;
     }
 
-    int samples = floor(duracion() * double(bitrate));
     double step = 1.0 / double(bitrate);
     int eventoIndex = 0;
     double duracion = m_eventos[eventoIndex].duracion(m_pulso);
     double sample = 0.0;
     double t = 0.0;
 
-    for (int i = 0; i < samples; i++)
+    while (eventoIndex < m_eventos.size())
     {
-        if (t >= duracion)
-        {
-            t -= duracion;
-            eventoIndex++;
-            duracion = m_eventos[eventoIndex].duracion(m_pulso);
-        }
-        if (eventoIndex >= m_eventos.size())
-            break;
         if (m_eventos[eventoIndex].esSilencio())
             sample = 0.0;
         else
             sample = m_eventos[eventoIndex].acorde()->sample(t, m_armonicos) * samplearEnvolvente(t, duracion);
         archivo.write((char *)&sample, sizeof(double));
         t += step;
+
+        if (t >= duracion)
+        {
+            t -= duracion;
+            eventoIndex++;
+            duracion = m_eventos[eventoIndex].duracion(m_pulso);
+        }
     }
 
     archivo.close();
