@@ -3,22 +3,22 @@
 
 using namespace std;
 
-Acorde* mayor(Nota nota)
+Acorde *mayor(Nota nota)
 {
     return new Acorde(nota, false, false, false);
 }
 
-Acorde* menor(Nota nota)
+Acorde *menor(Nota nota)
 {
     return new Acorde(nota, true, false, false);
 }
 
-int main()
+LineaMusical pruebaTerceras()
 {
     LineaMusical melodia = LineaMusical({});
 
     Nota nota = Nota(Cifrado::C, 2, Figura::Blanca);
-    Acorde* acorde;
+    Acorde *acorde;
 
     for (int i = 0; i < 8; i++)
     {
@@ -27,14 +27,48 @@ int main()
         nota = nota.tercera();
     }
 
+    return melodia;
+}
+
+LineaMusical pruebaBach()
+{
+    LineaMusical melodia = LineaMusical({});
+
+    melodia.agregar(new Nota(Cifrado::D, 4, Figura::Negra));
+    melodia.agregar(new Nota(Cifrado::G, 3, Figura::Corchea));
+    melodia.agregar(new Nota(Cifrado::A, 3, Figura::Corchea));
+    melodia.agregar(new Nota(Cifrado::B, 3, Figura::Corchea));
+    melodia.agregar(new Nota(Cifrado::C, 4, Figura::Corchea));
+    melodia.agregar(new Nota(Cifrado::D, 4, Figura::Negra));
+    melodia.agregar(new Nota(Cifrado::G, 3, Figura::Negra));
+    melodia.agregar(new Nota(Cifrado::G, 3, Figura::Negra));
+
+    melodia.agregar(new Nota(Cifrado::E, 4, Figura::Negra));
+    melodia.agregar(new Nota(Cifrado::C, 4, Figura::Corchea));
+    melodia.agregar(new Nota(Cifrado::D, 4, Figura::Corchea));
+    melodia.agregar(new Nota(Cifrado::E, 4, Figura::Corchea));
+    melodia.agregar(new Nota(Cifrado::FS, 4, Figura::Corchea));
+    melodia.agregar(new Nota(Cifrado::G, 4, Figura::Negra));
+    melodia.agregar(new Nota(Cifrado::G, 3, Figura::Negra));
+    melodia.agregar(new Nota(Cifrado::G, 3, Figura::Negra));
+
+
+
+    return melodia;
+}
+
+int main()
+{
+    auto melodia = pruebaBach();
+
     Envolvente env = Envolvente();
-    env.tiempoAtaque = 0.2;
-    env.tiempoDecaer = 0.05;
-    env.tiempoSoltar = 0.25;
-    env.nivelSostener = 0.75;
+    env.tiempoAtaque = 0.02;
+    env.tiempoDecaer = 0.01;
+    env.tiempoSoltar = 0.1;
+    env.nivelSostener = 1;
     melodia.setearEnvolvente(env);
 
-    melodia.setearArmonicos({1.0/4,1.0/2,1.0/4});
-    melodia.setearPulso(60);
+    melodia.setearArmonicos({1.0 / 2, 1.0 / 4, 1.0 / 8, 1.0 / 16});
+    melodia.setearPulso(100);
     melodia.producirRaw("music.bin");
 }
