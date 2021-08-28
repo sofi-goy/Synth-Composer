@@ -52,8 +52,6 @@ LineaMusical pruebaBach()
     melodia.agregar(new Nota(Cifrado::G, 3, Figura::Negra));
     melodia.agregar(new Nota(Cifrado::G, 3, Figura::Negra));
 
-
-
     return melodia;
 }
 
@@ -62,13 +60,14 @@ int main()
     auto melodia = pruebaBach();
 
     Envolvente env = Envolvente();
-    env.tiempoAtaque = 0.02;
-    env.tiempoDecaer = 0.01;
-    env.tiempoSoltar = 0.1;
-    env.nivelSostener = 1;
+    env.tiempoAtaque = 0.1;
+    env.tiempoDecaer = 0.1;
+    env.tiempoSoltar = 0.2;
+    env.nivelSostener = 0.5;
     melodia.setearEnvolvente(env);
 
-    melodia.setearArmonicos({1.0 / 2, 1.0 / 4, 1.0 / 8, 1.0 / 16});
-    melodia.setearPulso(100);
+    melodia.setearArmonicos({1.0 / 2, 1.0 / 4, 1.0 / 4});
+    melodia.setearPulso(90);
+    melodia.setearOnda(Onda::CUADRADA);
     melodia.producirRaw("music.bin");
 }

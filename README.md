@@ -24,7 +24,8 @@ Para probarlo (en Linux), hay que ejecutar el comando
  ## TODO
 
 - Implementar instrumentos básicos (piano, sinte, percusión, guitarra, bajo, cuerdas, saxo)
-- Usar distintos tipos de ondas (cuadradas, triangulares, serrucho) para emular consolas retro
+- ~~Usar distintos tipos de ondas (cuadradas, triangulares, serrucho) para emular consolas retro~~
+- Implementar ruido, capaz con Perlin?
 - ~~Permitir mayor personalización de los armónicos~~
 - Producir audios en formato WAV
 - Leer formato WAV, y permitir samplear grabaciones

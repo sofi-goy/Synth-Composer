@@ -30,13 +30,22 @@ enum Figura
     Semicorchea = 1
 };
 
+enum Onda
+{
+    SENO,
+    CUADRADA,
+    TRIANGULAR,
+    SERRUCHO,
+    RUIDO
+};
+
 typedef struct Envolvente
 {
-    double tiempoAtaque = 0.1;
-    double tiempoDecaer = 0.01;
-    double tiempoSoltar = 0.2;
+    double tiempoAtaque = 0.0001;
+    double tiempoDecaer = 0.0001;
+    double tiempoSoltar = 0.01;
 
-    double nivelSostener = 0.8;
+    double nivelSostener = 0.9;
     double nivelAtaque = 1.0;
 } Envolvente;
 
@@ -49,7 +58,7 @@ class Evento
 public:
     Figura m_figura;
     virtual double duracion(int pulso) { return 0; }
-    virtual double sample(double t, Armonicos armonicos) { return 0; }
+    virtual double sample(double t, Armonicos armonicos, Onda onda) { return 0; }
 };
 
 class Nota : public Evento
@@ -77,7 +86,7 @@ public:
     double frecuencia();
 
     double duracion(int pulso) override;
-    double sample(double t, Armonicos armonicos) override;
+    double sample(double t, Armonicos armonicos, Onda onda) override;
 };
 
 class Acorde : public Evento
@@ -96,7 +105,7 @@ public:
     Nota base() { return m_base; }
 
     double duracion(int pulso) override;
-    double sample(double t, Armonicos armonicos) override;
+    double sample(double t, Armonicos armonicos, Onda onda) override;
 };
 
 class LineaMusical
@@ -108,7 +117,8 @@ private:
     void actualizarDuracion();
 
     Envolvente m_envolvente;
-    Armonicos m_armonicos = {1.0 / 2, 1.0 / 4, 1.0 / 8, 1.0 / 16};
+    Armonicos m_armonicos = {1.0};
+    Onda m_onda = Onda::SENO;
 
 public:
     LineaMusical(vector<Evento *> eventos);
@@ -117,6 +127,7 @@ public:
     void setearPulso(int pulso);
     void setearArmonicos(Armonicos armonicos) { m_armonicos = armonicos; }
     void setearEnvolvente(Envolvente envolvente) { m_envolvente = envolvente; }
+    void setearOnda(Onda onda) { m_onda = onda; }
     void agregar(Evento *evento);
     void agregarEn(Evento *evento, int index);
 

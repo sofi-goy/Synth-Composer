@@ -72,13 +72,41 @@ string Nota::nombre()
     return notas[(int)m_nota] + to_string(m_octava);
 }
 
-double Nota::sample(double t, Armonicos armonicos)
+double ruidoPerlin(double x)
+{
+    // Fixme: TODO
+    return 0;
+}
+
+double oscilar(double argumento, Onda onda)
+{
+    double sample = 0.0;
+    switch (onda)
+    {
+    case SENO:
+        return sin(argumento);
+    case CUADRADA:
+        return sin(argumento) > 0.0 ? 1.0: -1.0;
+    case TRIANGULAR:
+        return 2 * asin(sin(argumento)) / M_PI;
+    case SERRUCHO:
+        for (int i=1; i<=30; i++)
+            sample += sin(argumento * i)/i;
+        return 2 * sample / M_PI;
+    case RUIDO:
+        return ruidoPerlin(argumento);
+    default:
+        return 0;
+    }
+}
+
+double Nota::sample(double t, Armonicos armonicos, Onda onda)
 {
     double sample = 0;
     int i = 1;
     for (double amplitud : armonicos)
     {
-        sample += amplitud * sin(t * 2.0 * M_PI * frecuencia() * i);
+        sample += amplitud * oscilar(t * 2.0 * M_PI * frecuencia() * i, onda);
         i++;
     }
 
@@ -118,11 +146,11 @@ vector<Nota> Acorde::notas()
     return basico;
 }
 
-double Acorde::sample(double t, Armonicos armonicos)
+double Acorde::sample(double t, Armonicos armonicos, Onda onda)
 {
     double sample = 0;
     for (Nota nota : notas())
-        sample += nota.sample(t, armonicos);
+        sample += nota.sample(t, armonicos, onda);
     return sample / notas().size();
 }
 
@@ -204,7 +232,7 @@ void LineaMusical::producirRaw(string nombre)
 
     while (eventoIndex < m_eventos.size())
     {
-        sample = m_eventos[eventoIndex]->sample(t, m_armonicos) * samplearEnvolvente(t, m_eventos[eventoIndex]->duracion(m_pulso));
+        sample = m_eventos[eventoIndex]->sample(t, m_armonicos, m_onda) * samplearEnvolvente(t, m_eventos[eventoIndex]->duracion(m_pulso));
         archivo.write((char *)&sample, sizeof(double));
         t += step;
 
