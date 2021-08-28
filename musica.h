@@ -77,7 +77,7 @@ private:
     bool m_septimaMenor;
 
 public:
-    Acorde(Nota base, Figura figura, bool menor = false, bool septima = false, bool septimaMenor = false);
+    Acorde(Nota base, bool menor = false, bool septima = false, bool septimaMenor = false);
 
     vector<Nota> notas();
     string nombre();
@@ -97,7 +97,7 @@ typedef struct Envolvente
     double nivelAtaque = 1.0;
 } Envolvente;
 
-class Voz
+class LineaMusical
 {
 private:
     vector<Evento*> m_eventos;
@@ -109,7 +109,7 @@ private:
     Envolvente m_envolvente;
 
 public:
-    Voz(vector<Evento*> eventos);
+    LineaMusical(vector<Evento*> eventos);
     vector<Evento*> eventos() { return m_eventos; }
 
     void setearPulso(int pulso);

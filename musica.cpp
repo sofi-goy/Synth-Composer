@@ -91,10 +91,10 @@ double Nota::duracion(int pulso)
     return round(frecuencia() * duracionExacta) / frecuencia();
 }
 
-Acorde::Acorde(Nota base, Figura figura, bool menor, bool septima, bool septimaMenor)
+Acorde::Acorde(Nota base, bool menor, bool septima, bool septimaMenor)
 {
     m_base = base;
-    m_figura = figura;
+    m_figura = base.m_figura;
     m_terceraMenor = menor;
     m_septima = septima;
     m_septimaMenor = septimaMenor;
@@ -136,32 +136,32 @@ double Acorde::duracion(int pulso)
     return mejorDuracion / notas().size();
 }
 
-Voz::Voz(vector<Evento*> eventos)
+LineaMusical::LineaMusical(vector<Evento*> eventos)
 {
     m_eventos = eventos;
     actualizarDuracion();
 }
 
-void Voz::agregar(Evento* evento)
+void LineaMusical::agregar(Evento* evento)
 {
     m_eventos.push_back(evento);
     m_duracion += evento->duracion(m_pulso);
 }
 
-void Voz::setearPulso(int pulso)
+void LineaMusical::setearPulso(int pulso)
 {
     m_pulso = pulso;
     actualizarDuracion();
 }
 
-void Voz::actualizarDuracion()
+void LineaMusical::actualizarDuracion()
 {
     m_duracion = 0;
     for (Evento* evento : m_eventos)
         m_duracion += evento->duracion(m_pulso);
 }
 
-double Voz::samplearEnvolvente(double tiempo, double duracionTotal)
+double LineaMusical::samplearEnvolvente(double tiempo, double duracionTotal)
 {
     double amplitud = 0.0;
 
@@ -185,7 +185,7 @@ double Voz::samplearEnvolvente(double tiempo, double duracionTotal)
     return amplitud;
 }
 
-void Voz::producirRaw(string nombre)
+void LineaMusical::producirRaw(string nombre)
 {
     const int bitrate = 44100;
 

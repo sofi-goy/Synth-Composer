@@ -3,38 +3,38 @@
 
 using namespace std;
 
-Acorde* mayor(Nota nota, Figura figura)
+Acorde* mayor(Nota nota)
 {
-    return new Acorde(nota, figura, false, false, false);
+    return new Acorde(nota, false, false, false);
 }
 
-Acorde* menor(Nota nota, Figura figura)
+Acorde* menor(Nota nota)
 {
-    return new Acorde(nota, figura, true, false, false);
+    return new Acorde(nota, true, false, false);
 }
 
 int main()
 {
-    Voz melodia = Voz({});
+    LineaMusical melodia = LineaMusical({});
 
-    Nota nota = Nota(Cifrado::C, 2);
-    Acorde* acorde = mayor(nota, Figura::Negra);
+    Nota nota = Nota(Cifrado::A, 2, Figura::Blanca);
+    Acorde* acorde;
 
-    for (int i = 0; i < 12; i++)
+    for (int i = 0; i < 8; i++)
     {
+        acorde = mayor(nota);
         melodia.agregar(acorde);
         nota = nota.tercera();
-        acorde = mayor(nota, Figura::Negra);
     }
 
     Envolvente env = Envolvente();
     env.tiempoAtaque = 0.1;
-    env.tiempoDecaer = 0.05;
+    env.tiempoDecaer = 0.02;
     env.tiempoSoltar = 0.2;
-    env.nivelSostener = 0.7;
+    env.nivelSostener = 0.75;
+    melodia.setearEnvolvente(env);
 
     melodia.setearPulso(60);
-    melodia.setearArmonicos(6);
-    melodia.setearEnvolvente(env);
+    melodia.setearArmonicos(10);
     melodia.producirRaw("music.bin");
 }
