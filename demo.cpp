@@ -3,14 +3,14 @@
 
 using namespace std;
 
-Acorde *mayor(Nota nota)
+Acorde* mayor(Nota nota, Figura figura)
 {
-    return new Acorde(nota, false, false, false);
+    return new Acorde(nota, figura, false, false, false);
 }
 
-Acorde *menor(Nota nota)
+Acorde* menor(Nota nota, Figura figura)
 {
-    return new Acorde(nota, true, false, false);
+    return new Acorde(nota, figura, true, false, false);
 }
 
 int main()
@@ -18,15 +18,13 @@ int main()
     Voz melodia = Voz({});
 
     Nota nota = Nota(Cifrado::C, 2);
-    Acorde *acorde = mayor(nota);
-    Evento evento = Evento(acorde, Figura::Negra);
+    Acorde* acorde = mayor(nota, Figura::Negra);
 
     for (int i = 0; i < 12; i++)
     {
-        melodia.agregar(move(evento));
+        melodia.agregar(acorde);
         nota = nota.tercera();
-        acorde = mayor(nota);
-        evento = Evento(acorde, Figura::Negra);
+        acorde = mayor(nota, Figura::Negra);
     }
 
     Envolvente env = Envolvente();

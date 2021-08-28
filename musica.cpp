@@ -9,12 +9,21 @@ Nota::Nota(Cifrado nota, int octava)
 {
     m_nota = nota;
     m_octava = octava;
+    m_figura = Figura::Negra;
 }
 
-Nota::Nota(int id)
+Nota::Nota(Cifrado nota, int octava, Figura figura)
+{
+    m_nota = nota;
+    m_octava = octava;
+    m_figura = figura;
+}
+
+Nota::Nota(int id, Figura figura)
 {
     m_nota = (Cifrado)(id % 12);
     m_octava = id / 12;
+    m_figura = figura;
 }
 
 int Nota::id()
@@ -24,37 +33,37 @@ int Nota::id()
 
 Nota Nota::bemol()
 {
-    return Nota(id() - 1);
+    return Nota(id() - 1, m_figura);
 }
 
 Nota Nota::sostenido()
 {
-    return Nota(id() + 1);
+    return Nota(id() + 1, m_figura);
 }
 
 Nota Nota::tercera()
 {
-    return Nota(id() + 4);
+    return Nota(id() + 4, m_figura);
 }
 
 Nota Nota::quinta()
 {
-    return Nota(id() + 7);
+    return Nota(id() + 7, m_figura);
 }
 
 Nota Nota::septima()
 {
-    return Nota(id() + 11);
+    return Nota(id() + 11, m_figura);
 }
 
 Nota Nota::octava()
 {
-    return Nota(id() + 12);
+    return Nota(id() + 12, m_figura);
 }
 
 double Nota::frecuencia()
 {
-    return 440.0 * pow(semitono, id() - Nota(Cifrado::A, 4).id());
+    return 440.0 * pow(semitono, id() - A4_id);
 }
 
 string Nota::nombre()
@@ -76,9 +85,16 @@ double Nota::sample(double t, int armonicos)
     return sample;
 }
 
-Acorde::Acorde(Nota base, bool menor, bool septima, bool septimaMenor)
+double Nota::duracion(int pulso)
+{
+    double duracionExacta = (double)m_figura * 60.0 / (pulso * 4.0);
+    return round(frecuencia() * duracionExacta) / frecuencia();
+}
+
+Acorde::Acorde(Nota base, Figura figura, bool menor, bool septima, bool septimaMenor)
 {
     m_base = base;
+    m_figura = figura;
     m_terceraMenor = menor;
     m_septima = septima;
     m_septimaMenor = septimaMenor;
@@ -110,35 +126,26 @@ double Acorde::sample(double t, int armonicos)
     return sample / notas().size();
 }
 
-double Acorde::mejorDuracion(double duracionPedida)
+// Fixme: implementar el puntillo
+double Acorde::duracion(int pulso)
 {
     double mejorDuracion = 0.0;
     for (Nota nota : notas())
-        mejorDuracion += round(nota.frecuencia() * duracionPedida) / nota.frecuencia();
+        mejorDuracion += nota.duracion(pulso);
 
     return mejorDuracion / notas().size();
 }
 
-// Fixme: implementar el puntillo
-double Evento::duracion(int pulso)
-{
-    double duracionExacta = (double)m_figura * 60.0 / (pulso * 4.0);
-    if (esSilencio())
-        return duracionExacta;
-
-    return m_acorde->mejorDuracion(duracionExacta);
-}
-
-Voz::Voz(vector<Evento> eventos)
+Voz::Voz(vector<Evento*> eventos)
 {
     m_eventos = eventos;
     actualizarDuracion();
 }
 
-void Voz::agregar(Evento evento)
+void Voz::agregar(Evento* evento)
 {
     m_eventos.push_back(evento);
-    m_duracion += evento.duracion(m_pulso);
+    m_duracion += evento->duracion(m_pulso);
 }
 
 void Voz::setearPulso(int pulso)
@@ -150,8 +157,8 @@ void Voz::setearPulso(int pulso)
 void Voz::actualizarDuracion()
 {
     m_duracion = 0;
-    for (Evento evento : m_eventos)
-        m_duracion += evento.duracion(m_pulso);
+    for (Evento* evento : m_eventos)
+        m_duracion += evento->duracion(m_pulso);
 }
 
 double Voz::samplearEnvolvente(double tiempo, double duracionTotal)
@@ -192,24 +199,19 @@ void Voz::producirRaw(string nombre)
 
     double step = 1.0 / double(bitrate);
     int eventoIndex = 0;
-    double duracion = m_eventos[eventoIndex].duracion(m_pulso);
     double sample = 0.0;
     double t = 0.0;
 
     while (eventoIndex < m_eventos.size())
     {
-        if (m_eventos[eventoIndex].esSilencio())
-            sample = 0.0;
-        else
-            sample = m_eventos[eventoIndex].acorde()->sample(t, m_armonicos) * samplearEnvolvente(t, duracion);
+        sample = m_eventos[eventoIndex]->sample(t, m_armonicos) * samplearEnvolvente(t, m_eventos[eventoIndex]->duracion(m_pulso));
         archivo.write((char *)&sample, sizeof(double));
         t += step;
 
-        if (t >= duracion)
+        if (t >= m_eventos[eventoIndex]->duracion(m_pulso))
         {
-            t -= duracion;
+            t -= m_eventos[eventoIndex]->duracion(m_pulso);
             eventoIndex++;
-            duracion = m_eventos[eventoIndex].duracion(m_pulso);
         }
     }
 
