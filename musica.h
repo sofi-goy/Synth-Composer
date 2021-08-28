@@ -55,8 +55,9 @@ double const semitono = 1.059463094359295264561825294946341700779204317494185628
 
 class Evento
 {
-public:
+protected:
     Figura m_figura;
+public:
     virtual double duracion(int pulso) { return 0; }
     virtual double sample(double t, Armonicos armonicos, Onda onda) { return 0; }
 };
@@ -74,6 +75,8 @@ public:
     Nota(Cifrado nota, int octava);
     Nota(Cifrado nota, int octava, Figura figura);
     Nota(int id, Figura figura);
+    
+    Figura figura() { return m_figura; }
 
     string nombre();
     Nota tercera();
@@ -110,7 +113,7 @@ public:
 
 class LineaMusical
 {
-private:
+protected:
     vector<Evento *> m_eventos;
     int m_pulso = 60;
     double m_duracion = 0;

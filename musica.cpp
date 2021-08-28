@@ -90,7 +90,7 @@ double oscilar(double argumento, Onda onda)
     case TRIANGULAR:
         return 2 * asin(sin(argumento)) / M_PI;
     case SERRUCHO:
-        for (int i=1; i<=30; i++)
+        for (int i=1; i<=50; i++)
             sample += sin(argumento * i)/i;
         return 2 * sample / M_PI;
     case RUIDO:
@@ -122,7 +122,7 @@ double Nota::duracion(int pulso)
 Acorde::Acorde(Nota base, bool menor, bool septima, bool septimaMenor)
 {
     m_base = base;
-    m_figura = base.m_figura;
+    m_figura = base.figura();
     m_terceraMenor = menor;
     m_septima = septima;
     m_septimaMenor = septimaMenor;
