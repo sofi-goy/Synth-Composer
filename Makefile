@@ -1,7 +1,7 @@
-synth: demo.cpp musica.cpp musica.h
+synth: demo.cpp musica.cpp musica.h instrumentos.h
 	g++ demo.cpp musica.cpp -o synth
 
-debug: demo.cpp musica.cpp musica.h
+debug: demo.cpp musica.cpp musica.h instrumentos.h
 	g++ -g demo.cpp musica.cpp -o synth
 	
 run:

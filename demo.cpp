@@ -1,4 +1,5 @@
 #include "musica.h"
+#include "instrumentos.h"
 #include <iostream>
 
 using namespace std;
@@ -13,9 +14,9 @@ Acorde *menor(Nota nota)
     return new Acorde(nota, true, false, false);
 }
 
-LineaMusical pruebaTerceras()
+vector<Evento*> pruebaTerceras()
 {
-    LineaMusical melodia = LineaMusical({});
+    vector<Evento*> melodia {};
 
     Nota nota = Nota(Cifrado::C, 2, Figura::Blanca);
     Acorde *acorde;
@@ -23,34 +24,34 @@ LineaMusical pruebaTerceras()
     for (int i = 0; i < 8; i++)
     {
         acorde = menor(nota);
-        melodia.agregar(acorde);
+        melodia.push_back(acorde);
         nota = nota.tercera();
     }
 
     return melodia;
 }
 
-LineaMusical pruebaBach()
+vector<Evento*> pruebaBach()
 {
-    LineaMusical melodia = LineaMusical({});
+    vector<Evento*> melodia {};
 
-    melodia.agregar(new Nota(Cifrado::D, 4, Figura::Negra));
-    melodia.agregar(new Nota(Cifrado::G, 3, Figura::Corchea));
-    melodia.agregar(new Nota(Cifrado::A, 3, Figura::Corchea));
-    melodia.agregar(new Nota(Cifrado::B, 3, Figura::Corchea));
-    melodia.agregar(new Nota(Cifrado::C, 4, Figura::Corchea));
-    melodia.agregar(new Nota(Cifrado::D, 4, Figura::Negra));
-    melodia.agregar(new Nota(Cifrado::G, 3, Figura::Negra));
-    melodia.agregar(new Nota(Cifrado::G, 3, Figura::Negra));
+    melodia.push_back(new Nota(Cifrado::D, 4, Figura::Negra));
+    melodia.push_back(new Nota(Cifrado::G, 3, Figura::Corchea));
+    melodia.push_back(new Nota(Cifrado::A, 3, Figura::Corchea));
+    melodia.push_back(new Nota(Cifrado::B, 3, Figura::Corchea));
+    melodia.push_back(new Nota(Cifrado::C, 4, Figura::Corchea));
+    melodia.push_back(new Nota(Cifrado::D, 4, Figura::Negra));
+    melodia.push_back(new Nota(Cifrado::G, 3, Figura::Negra));
+    melodia.push_back(new Nota(Cifrado::G, 3, Figura::Negra));
 
-    melodia.agregar(new Nota(Cifrado::E, 4, Figura::Negra));
-    melodia.agregar(new Nota(Cifrado::C, 4, Figura::Corchea));
-    melodia.agregar(new Nota(Cifrado::D, 4, Figura::Corchea));
-    melodia.agregar(new Nota(Cifrado::E, 4, Figura::Corchea));
-    melodia.agregar(new Nota(Cifrado::FS, 4, Figura::Corchea));
-    melodia.agregar(new Nota(Cifrado::G, 4, Figura::Negra));
-    melodia.agregar(new Nota(Cifrado::G, 3, Figura::Negra));
-    melodia.agregar(new Nota(Cifrado::G, 3, Figura::Negra));
+    melodia.push_back(new Nota(Cifrado::E, 4, Figura::Negra));
+    melodia.push_back(new Nota(Cifrado::C, 4, Figura::Corchea));
+    melodia.push_back(new Nota(Cifrado::D, 4, Figura::Corchea));
+    melodia.push_back(new Nota(Cifrado::E, 4, Figura::Corchea));
+    melodia.push_back(new Nota(Cifrado::FS, 4, Figura::Corchea));
+    melodia.push_back(new Nota(Cifrado::G, 4, Figura::Negra));
+    melodia.push_back(new Nota(Cifrado::G, 3, Figura::Negra));
+    melodia.push_back(new Nota(Cifrado::G, 3, Figura::Negra));
 
     return melodia;
 }
@@ -58,16 +59,8 @@ LineaMusical pruebaBach()
 int main()
 {
     auto melodia = pruebaBach();
-
-    Envolvente env = Envolvente();
-    env.tiempoAtaque = 0.1;
-    env.tiempoDecaer = 0.1;
-    env.tiempoSoltar = 0.2;
-    env.nivelSostener = 0.5;
-    melodia.setearEnvolvente(env);
-
-    melodia.setearArmonicos({1.0 / 2, 1.0 / 4, 1.0 / 4});
-    melodia.setearPulso(90);
-    melodia.setearOnda(Onda::CUADRADA);
-    melodia.producirRaw("music.bin");
+    Harmonica principal {melodia};
+    
+    principal.setearPulso(60);
+    principal.producirRaw("music.bin");
 }
