@@ -14,9 +14,9 @@ Acorde *menor(Nota nota)
     return new Acorde(nota, true, false, false);
 }
 
-vector<Evento*> pruebaTerceras()
+vector<Evento *> pruebaTerceras()
 {
-    vector<Evento*> melodia {};
+    vector<Evento *> melodia{};
 
     Nota nota = Nota(Cifrado::C, 2, Figura::Blanca);
     Acorde *acorde;
@@ -31,36 +31,82 @@ vector<Evento*> pruebaTerceras()
     return melodia;
 }
 
-vector<Evento*> pruebaBach()
+vector<Evento *> pruebaBach()
 {
-    vector<Evento*> melodia {};
-
-    melodia.push_back(new Nota(Cifrado::D, 4, Figura::Negra));
-    melodia.push_back(new Nota(Cifrado::G, 3, Figura::Corchea));
-    melodia.push_back(new Nota(Cifrado::A, 3, Figura::Corchea));
-    melodia.push_back(new Nota(Cifrado::B, 3, Figura::Corchea));
-    melodia.push_back(new Nota(Cifrado::C, 4, Figura::Corchea));
-    melodia.push_back(new Nota(Cifrado::D, 4, Figura::Negra));
-    melodia.push_back(new Nota(Cifrado::G, 3, Figura::Negra));
-    melodia.push_back(new Nota(Cifrado::G, 3, Figura::Negra));
-
-    melodia.push_back(new Nota(Cifrado::E, 4, Figura::Negra));
-    melodia.push_back(new Nota(Cifrado::C, 4, Figura::Corchea));
-    melodia.push_back(new Nota(Cifrado::D, 4, Figura::Corchea));
-    melodia.push_back(new Nota(Cifrado::E, 4, Figura::Corchea));
-    melodia.push_back(new Nota(Cifrado::FS, 4, Figura::Corchea));
-    melodia.push_back(new Nota(Cifrado::G, 4, Figura::Negra));
-    melodia.push_back(new Nota(Cifrado::G, 3, Figura::Negra));
-    melodia.push_back(new Nota(Cifrado::G, 3, Figura::Negra));
-
-    return melodia;
+    return {
+        new Nota(Cifrado::D, 4, Figura::Negra),
+        new Nota(Cifrado::G, 3, Figura::Corchea),
+        new Nota(Cifrado::A, 3, Figura::Corchea),
+        new Nota(Cifrado::B, 3, Figura::Corchea),
+        new Nota(Cifrado::C, 4, Figura::Corchea),
+        new Nota(Cifrado::D, 4, Figura::Negra),
+        new Nota(Cifrado::G, 3, Figura::Negra),
+        new Nota(Cifrado::G, 3, Figura::Negra),
+        new Nota(Cifrado::E, 4, Figura::Negra),
+        new Nota(Cifrado::C, 4, Figura::Corchea),
+        new Nota(Cifrado::D, 4, Figura::Corchea),
+        new Nota(Cifrado::E, 4, Figura::Corchea),
+        new Nota(Cifrado::FS, 4, Figura::Corchea),
+        new Nota(Cifrado::G, 4, Figura::Negra),
+        new Nota(Cifrado::G, 3, Figura::Negra),
+        new Nota(Cifrado::G, 3, Figura::Negra),
+        new Nota(Cifrado::C, 4, Figura::Negra),
+        new Nota(Cifrado::D, 4, Figura::Corchea),
+        new Nota(Cifrado::C, 4, Figura::Corchea),
+        new Nota(Cifrado::B, 3, Figura::Corchea),
+        new Nota(Cifrado::A, 3, Figura::Corchea),
+        new Nota(Cifrado::B, 3, Figura::Negra),
+        new Nota(Cifrado::C, 4, Figura::Corchea),
+        new Nota(Cifrado::B, 3, Figura::Corchea),
+        new Nota(Cifrado::A, 3, Figura::Corchea),
+        new Nota(Cifrado::G, 3, Figura::Corchea),
+        new Nota(Cifrado::FS, 3, Figura::Negra),
+        new Nota(Cifrado::G, 3, Figura::Corchea),
+        new Nota(Cifrado::A, 3, Figura::Corchea),
+        new Nota(Cifrado::B, 3, Figura::Corchea),
+        new Nota(Cifrado::G, 3, Figura::Corchea),
+        new Nota(Cifrado::A, 3, Figura::Blanca),
+        new Nota(Cifrado::A, 3, Figura::Negra),
+        new Nota(Cifrado::D, 4, Figura::Negra),
+        new Nota(Cifrado::G, 3, Figura::Corchea),
+        new Nota(Cifrado::A, 3, Figura::Corchea),
+        new Nota(Cifrado::B, 3, Figura::Corchea),
+        new Nota(Cifrado::C, 4, Figura::Corchea),
+        new Nota(Cifrado::D, 4, Figura::Negra),
+        new Nota(Cifrado::G, 3, Figura::Negra),
+        new Nota(Cifrado::G, 3, Figura::Negra),
+        new Nota(Cifrado::E, 4, Figura::Negra),
+        new Nota(Cifrado::C, 4, Figura::Corchea),
+        new Nota(Cifrado::D, 4, Figura::Corchea),
+        new Nota(Cifrado::E, 4, Figura::Corchea),
+        new Nota(Cifrado::FS, 4, Figura::Corchea),
+        new Nota(Cifrado::G, 4, Figura::Negra),
+        new Nota(Cifrado::G, 3, Figura::Negra),
+        new Nota(Cifrado::G, 3, Figura::Negra),
+        new Nota(Cifrado::C, 4, Figura::Negra),
+        new Nota(Cifrado::D, 4, Figura::Corchea),
+        new Nota(Cifrado::C, 4, Figura::Corchea),
+        new Nota(Cifrado::B, 3, Figura::Corchea),
+        new Nota(Cifrado::A, 3, Figura::Corchea),
+        new Nota(Cifrado::B, 3, Figura::Negra),
+        new Nota(Cifrado::C, 4, Figura::Corchea),
+        new Nota(Cifrado::B, 3, Figura::Corchea),
+        new Nota(Cifrado::A, 3, Figura::Corchea),
+        new Nota(Cifrado::G, 3, Figura::Corchea),
+        new Nota(Cifrado::A, 3, Figura::Negra),
+        new Nota(Cifrado::B, 3, Figura::Corchea),
+        new Nota(Cifrado::A, 3, Figura::Corchea),
+        new Nota(Cifrado::G, 3, Figura::Corchea),
+        new Nota(Cifrado::FS, 3, Figura::Corchea),
+        new Nota(Cifrado::G, 3, Figura::Blanca),
+        new Nota(Cifrado::G, 3, Figura::Negra)};
 }
 
 int main()
 {
     auto melodia = pruebaBach();
-    Harmonica principal {melodia};
-    
-    principal.setearPulso(60);
+    Sinte principal{melodia};
+
+    principal.setearPulso(180);
     principal.producirRaw("music.bin");
 }

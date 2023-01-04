@@ -90,7 +90,7 @@ double oscilar(double argumento, Onda onda)
     case TRIANGULAR:
         return 2 * asin(sin(argumento)) / M_PI;
     case SERRUCHO:
-        for (int i=1; i<=50; i++)
+        for (int i=1; i<=20; i++)
             sample += sin(argumento * i)/i;
         return 2 * sample / M_PI;
     case RUIDO:
@@ -154,7 +154,7 @@ double Acorde::sample(double t, Armonicos armonicos, Onda onda)
     return sample / notas().size();
 }
 
-// Fixme: implementar el puntillo
+// TODO: implementar el puntillo
 double Acorde::duracion(int pulso)
 {
     double mejorDuracion = 0.0;

@@ -23,18 +23,10 @@ public:
     {
         m_envolvente.tiempoAtaque = 0.07;
         m_envolvente.tiempoDecaer = 0.15;
-        m_envolvente.tiempoSoltar = 0.1;
-        m_envolvente.nivelSostener = 0.9;
+        m_envolvente.tiempoSoltar = 0.08;
+        m_envolvente.nivelSostener = 0.8;
 
-        m_armonicos = {};
-        double amplitud = 0.49;
-        int i;
-        for (i = 0; i <= 10; i+=2){
-            m_armonicos.push_back(amplitud);
-            m_armonicos.push_back(0);
-            amplitud /= 2;
-        }
-        m_armonicos[i] *= 2;
+        m_armonicos = {0.5, 0.0, 0.3};
 
         m_onda = Onda::SERRUCHO;
     }
@@ -52,7 +44,7 @@ public:
 
         m_armonicos = {};
         double amplitud = 0.5;
-        for (int i = 1; i <= 8; i+=2){
+        for (int i = 1; i <= 8; i+=1){
             m_armonicos.push_back(amplitud);
             m_armonicos.push_back(0);
             amplitud /= 2;

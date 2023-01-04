@@ -4,5 +4,5 @@ synth: demo.cpp musica.cpp musica.h instrumentos.h
 debug: demo.cpp musica.cpp musica.h instrumentos.h
 	g++ -g demo.cpp musica.cpp -o synth
 	
-run:
+run: synth
 	./synth && ffplay -f f64le -ar 44100 -showmode 1 music.bin
