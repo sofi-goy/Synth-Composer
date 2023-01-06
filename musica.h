@@ -58,8 +58,14 @@ class Evento
 protected:
 public:
     Figura m_figura;
-    virtual double duracion(int pulso) { return 0; }
+    virtual double duracion(int pulso) { return (double)m_figura * 60.0 / (pulso * 4.0); }
     virtual double sample(double t, Armonicos armonicos, Onda onda) { return 0; }
+};
+
+class Silencio : public Evento
+{
+public:
+    Silencio(Figura figura) { m_figura = figura; }
 };
 
 class Nota : public Evento

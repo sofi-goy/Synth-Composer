@@ -107,22 +107,39 @@ vector<Evento *> pruebaAcordes()
     vector<Evento *> linea {};
     
     auto acorde = new Acorde(Nota(Cifrado::C, 2, Figura::Blanca));
+    auto silencio = new Silencio(Figura::Blanca);
 
     for (int i = 0; i < 6; i++)
         linea.push_back(acorde);
+        linea.push_back(silencio);
 
     return linea;
 }
 
+vector<Evento *> megalovania()
+{
+    return {
+        new Nota(Cifrado::D, 4, Figura::Semicorchea),
+        new Nota(Cifrado::D, 4, Figura::Semicorchea),
+        new Nota(Cifrado::D, 5, Figura::Corchea),
+        new Nota(Cifrado::A, 4, Figura::Corchea),
+        new Silencio(Figura::Semicorchea),
+        new Nota(Cifrado::GS, 4, Figura::Semicorchea),
+        new Silencio(Figura::Semicorchea),
+        new Nota(Cifrado::G, 4, Figura::Semicorchea),
+        new Silencio(Figura::Semicorchea),
+        new Nota(Cifrado::F, 4, Figura::Corchea),
+        new Nota(Cifrado::D, 4, Figura::Semicorchea),
+        new Nota(Cifrado::F, 4, Figura::Semicorchea),
+        new Nota(Cifrado::G, 4, Figura::Semicorchea)
+    };
+}
+
 int main()
 {
-    auto bach = pruebaBach();
-    
-    Harmonica melodia {bach};
+    Sinte melodia { megalovania() };
     melodia.setearPulso(120);
 
-    Sinte acordes {pruebaTerceras()};
-
-    Cancion cancion {{melodia, acordes}};
+    Cancion cancion {{melodia}};
     cancion.producirRaw("music.bin");
 }

@@ -222,10 +222,11 @@ double LineaMusical::samplearEnvolvente(double tiempo, double duracionTotal)
     return amplitud;
 }
 
-double LineaMusical::samplear(double tiempo, bool debug=false)
+double LineaMusical::samplear(double tiempo, bool debug = false)
 {
     double t = tiempo - m_eventoInicio;
-    if (t >= eventoActual()->duracion(m_pulso)){
+    if (t >= eventoActual()->duracion(m_pulso))
+    {
         cout << "====================================================" << endl;
         cout << "Pasando de evento " << tiempo << " " << m_eventoInicio << " " << eventoActual()->duracion(m_pulso) << endl;
         proximoEvento(tiempo);
@@ -234,7 +235,6 @@ double LineaMusical::samplear(double tiempo, bool debug=false)
     if (terminado())
         return 0.0;
 
-
     double sample = eventoActual()->sample(t, m_armonicos, m_onda) * samplearEnvolvente(t, eventoActual()->duracion(m_pulso));
 
     if (debug)
@@ -242,7 +242,6 @@ double LineaMusical::samplear(double tiempo, bool debug=false)
 
     return sample;
 }
-
 
 void Cancion::producirRaw(string nombre)
 {
@@ -269,44 +268,18 @@ void Cancion::producirRaw(string nombre)
     {
         sample = 0.0;
         for (auto &canal : activos)
-            sample += canal.samplear(t, (n % 1000 == 0));
+            sample += canal.samplear(t);
 
         sample /= activos.size();
 
         activos.erase(remove_if(activos.begin(), activos.end(), [](LineaMusical x)
                                 { if(x.terminado())
                                     cout << "Borro un canal terminado " << endl; 
-                                return x.terminado(); }), activos.end());
-        
+                                return x.terminado(); }),
+                      activos.end());
+
         archivo.write((char *)&sample, sizeof(double));
         t += step;
         n++;
     }
 }
-
-// void LineaMusical::producirRaw(string nombre)
-// {
-//     const int bitrate = 44100;
-//     double step = 1.0 / double(bitrate);
-
-//     ofstream archivo;
-//     archivo.open(nombre, ios::binary);
-//     if (!archivo)
-//     {
-//         cerr << "No se pudo abrir el archivo " << nombre << endl;
-//         return;
-//     }
-
-//     principio();
-//     double sample = 0.0;
-//     double t = 0.0;
-
-//     while (not terminado())
-//     {
-//         sample = samplear(t);
-//         archivo.write((char *)&sample, sizeof(double));
-//         t += step;
-//     }
-
-//     archivo.close();
-// }
