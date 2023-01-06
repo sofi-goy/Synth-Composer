@@ -131,6 +131,48 @@ vector<Evento *> megalovania()
         new Nota(Cifrado::F, 4, Figura::Corchea),
         new Nota(Cifrado::D, 4, Figura::Semicorchea),
         new Nota(Cifrado::F, 4, Figura::Semicorchea),
+        new Nota(Cifrado::G, 4, Figura::Semicorchea),
+
+        new Nota(Cifrado::C, 4, Figura::Semicorchea),
+        new Nota(Cifrado::C, 4, Figura::Semicorchea),
+        new Nota(Cifrado::D, 5, Figura::Corchea),
+        new Nota(Cifrado::A, 4, Figura::Corchea),
+        new Silencio(Figura::Semicorchea),
+        new Nota(Cifrado::GS, 4, Figura::Semicorchea),
+        new Silencio(Figura::Semicorchea),
+        new Nota(Cifrado::G, 4, Figura::Semicorchea),
+        new Silencio(Figura::Semicorchea),
+        new Nota(Cifrado::F, 4, Figura::Corchea),
+        new Nota(Cifrado::D, 4, Figura::Semicorchea),
+        new Nota(Cifrado::F, 4, Figura::Semicorchea),
+        new Nota(Cifrado::G, 4, Figura::Semicorchea),
+
+        new Nota(Cifrado::B, 3, Figura::Semicorchea),
+        new Nota(Cifrado::B, 3, Figura::Semicorchea),
+        new Nota(Cifrado::D, 5, Figura::Corchea),
+        new Nota(Cifrado::A, 4, Figura::Corchea),
+        new Silencio(Figura::Semicorchea),
+        new Nota(Cifrado::GS, 4, Figura::Semicorchea),
+        new Silencio(Figura::Semicorchea),
+        new Nota(Cifrado::G, 4, Figura::Semicorchea),
+        new Silencio(Figura::Semicorchea),
+        new Nota(Cifrado::F, 4, Figura::Corchea),
+        new Nota(Cifrado::D, 4, Figura::Semicorchea),
+        new Nota(Cifrado::F, 4, Figura::Semicorchea),
+        new Nota(Cifrado::G, 4, Figura::Semicorchea),
+
+        new Nota(Cifrado::AS, 3, Figura::Semicorchea),
+        new Nota(Cifrado::AS, 3, Figura::Semicorchea),
+        new Nota(Cifrado::D, 5, Figura::Corchea),
+        new Nota(Cifrado::A, 4, Figura::Corchea),
+        new Silencio(Figura::Semicorchea),
+        new Nota(Cifrado::GS, 4, Figura::Semicorchea),
+        new Silencio(Figura::Semicorchea),
+        new Nota(Cifrado::G, 4, Figura::Semicorchea),
+        new Silencio(Figura::Semicorchea),
+        new Nota(Cifrado::F, 4, Figura::Corchea),
+        new Nota(Cifrado::D, 4, Figura::Semicorchea),
+        new Nota(Cifrado::F, 4, Figura::Semicorchea),
         new Nota(Cifrado::G, 4, Figura::Semicorchea)
     };
 }
@@ -141,5 +183,6 @@ int main()
     melodia.setearPulso(120);
 
     Cancion cancion {{melodia}};
-    cancion.producirRaw("music.bin");
+    // cancion.producirRaw("music.bin");
+    cancion.producirWave("music.wav");
 }

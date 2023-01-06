@@ -4,6 +4,8 @@
 #include <fstream>
 #include <algorithm>
 
+#include "wave/file.h"
+
 using namespace std;
 
 Nota::Nota(Cifrado nota, int octava)
@@ -243,18 +245,10 @@ double LineaMusical::samplear(double tiempo, bool debug = false)
     return sample;
 }
 
-void Cancion::producirRaw(string nombre)
+vector<float> Cancion::producirSamples()
 {
     const int bitrate = 44100;
     const double step = 1.0 / double(bitrate);
-
-    ofstream archivo;
-    archivo.open(nombre, ios::binary);
-    if (!archivo)
-    {
-        cerr << "No se pudo abrir el archivo " << nombre << endl;
-        return;
-    }
 
     vector<LineaMusical> activos = m_canales;
     for (auto &canal : activos)
@@ -263,6 +257,7 @@ void Cancion::producirRaw(string nombre)
     double sample = 0.0;
     double t = 0.0;
     int n = 0;
+    auto samples = vector<float>();
 
     while (not activos.empty())
     {
@@ -278,8 +273,41 @@ void Cancion::producirRaw(string nombre)
                                 return x.terminado(); }),
                       activos.end());
 
-        archivo.write((char *)&sample, sizeof(double));
+        samples.push_back((float) sample);
         t += step;
         n++;
     }
+
+    cout << "Terminé de samplear la canción!" << endl;
+
+    return samples;
+}
+
+void Cancion::producirRaw(string nombre)
+{
+    ofstream archivo;
+    archivo.open(nombre, ios::binary);
+    if (!archivo)
+    {
+        cerr << "No se pudo abrir el archivo " << nombre << endl;
+        return;
+    }
+
+}
+
+void Cancion::producirWave(string nombre) {
+    wave::File archivo;
+    wave::Error err = archivo.Open(nombre, wave::kOut);
+
+    if (err) {
+        cerr << "No se pudo abrir el archivo " << nombre << endl;
+        return;
+    }
+
+    archivo.set_sample_rate(44100);
+    archivo.set_bits_per_sample(16);
+    archivo.set_channel_number(1);
+
+    auto content = producirSamples();
+    archivo.Write(content);
 }

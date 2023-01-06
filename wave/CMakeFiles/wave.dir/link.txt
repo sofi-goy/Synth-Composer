@@ -1,0 +1,2 @@
+/usr/bin/ar qc libwave.a CMakeFiles/wave.dir/header/data_header.cc.o CMakeFiles/wave.dir/header/riff_header.cc.o CMakeFiles/wave.dir/header/fmt_header.cc.o CMakeFiles/wave.dir/header/wave_header.cc.o CMakeFiles/wave.dir/header.cc.o CMakeFiles/wave.dir/header_list.cc.o CMakeFiles/wave.dir/file.cc.o
+/usr/bin/ranlib libwave.a

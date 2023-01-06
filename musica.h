@@ -166,5 +166,7 @@ protected:
 public:
     Cancion(vector<LineaMusical> canales) : m_canales(canales){};
 
+    vector<float> producirSamples();
     void producirRaw(string nombre);
+    void producirWave(string nombre);
 };

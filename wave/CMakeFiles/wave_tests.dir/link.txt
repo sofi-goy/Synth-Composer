@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/wave_tests.dir/file_test.cc.o CMakeFiles/wave_tests.dir/header_test.cc.o -o wave_tests   -L/home/sof/source/wave/gtest-install/lib  -Wl,-rpath,/home/sof/source/wave/gtest-install/lib -lgtest -lgtest_main libwave.a -lpthread 
