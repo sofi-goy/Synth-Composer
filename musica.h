@@ -56,8 +56,8 @@ double const semitono = 1.059463094359295264561825294946341700779204317494185628
 class Evento
 {
 protected:
-    Figura m_figura;
 public:
+    Figura m_figura;
     virtual double duracion(int pulso) { return 0; }
     virtual double sample(double t, Armonicos armonicos, Onda onda) { return 0; }
 };
@@ -75,7 +75,7 @@ public:
     Nota(Cifrado nota, int octava);
     Nota(Cifrado nota, int octava, Figura figura);
     Nota(int id, Figura figura);
-    
+
     Figura figura() { return m_figura; }
 
     string nombre();
@@ -123,6 +123,9 @@ protected:
     Armonicos m_armonicos = {1.0};
     Onda m_onda = Onda::SENO;
 
+    int m_eventoIndex = 0;
+    double m_eventoInicio = 0.0;
+
 public:
     LineaMusical(vector<Evento *> eventos);
     vector<Evento *> eventos() { return m_eventos; }
@@ -134,8 +137,28 @@ public:
     void agregar(Evento *evento);
     void agregarEn(Evento *evento, int index);
 
+    double samplear(double tiempo, bool debug);
     double samplearEnvolvente(double tiempo, double duracionTotal);
     void producirRaw(string nombre);
 
     double duracion() { return m_duracion; }
+    void principio()
+    {
+        m_eventoIndex = 0;
+        m_eventoInicio = 0.0;
+    }
+    bool terminado() { return m_eventoIndex >= m_eventos.size(); }
+    Evento *eventoActual() { return m_eventos[m_eventoIndex]; }
+    void proximoEvento(double tiempo);
+};
+
+class Cancion
+{
+protected:
+    vector<LineaMusical> m_canales;
+
+public:
+    Cancion(vector<LineaMusical> canales) : m_canales(canales){};
+
+    void producirRaw(string nombre);
 };

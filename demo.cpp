@@ -102,11 +102,27 @@ vector<Evento *> pruebaBach()
         new Nota(Cifrado::G, 3, Figura::Negra)};
 }
 
+vector<Evento *> pruebaAcordes()
+{
+    vector<Evento *> linea {};
+    
+    auto acorde = new Acorde(Nota(Cifrado::C, 2, Figura::Blanca));
+
+    for (int i = 0; i < 6; i++)
+        linea.push_back(acorde);
+
+    return linea;
+}
+
 int main()
 {
-    auto melodia = pruebaBach();
-    Sinte principal{melodia};
+    auto bach = pruebaBach();
+    
+    Harmonica melodia {bach};
+    melodia.setearPulso(120);
 
-    principal.setearPulso(180);
-    principal.producirRaw("music.bin");
+    Sinte acordes {pruebaTerceras()};
+
+    Cancion cancion {{melodia, acordes}};
+    cancion.producirRaw("music.bin");
 }

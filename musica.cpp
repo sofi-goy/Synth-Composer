@@ -2,6 +2,7 @@
 #include <math.h>
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 
 using namespace std;
 
@@ -86,12 +87,12 @@ double oscilar(double argumento, Onda onda)
     case SENO:
         return sin(argumento);
     case CUADRADA:
-        return sin(argumento) > 0.0 ? 1.0: -1.0;
+        return sin(argumento) > 0.0 ? 1.0 : -1.0;
     case TRIANGULAR:
         return 2 * asin(sin(argumento)) / M_PI;
     case SERRUCHO:
-        for (int i=1; i<=20; i++)
-            sample += sin(argumento * i)/i;
+        for (int i = 1; i <= 20; i++)
+            sample += sin(argumento * i) / i;
         return 2 * sample / M_PI;
     case RUIDO:
         return ruidoPerlin(argumento);
@@ -117,6 +118,7 @@ double Nota::duracion(int pulso)
 {
     double duracionExacta = (double)m_figura * 60.0 / (pulso * 4.0);
     return round(frecuencia() * duracionExacta) / frecuencia();
+    // return duracionExacta;
 }
 
 Acorde::Acorde(Nota base, bool menor, bool septima, bool septimaMenor)
@@ -189,6 +191,13 @@ void LineaMusical::actualizarDuracion()
         m_duracion += evento->duracion(m_pulso);
 }
 
+void LineaMusical::proximoEvento(double tiempo)
+{
+    // cout << "Terminé un evento de duración " << eventoActual()->m_figura << endl;
+    m_eventoInicio += eventoActual()->duracion(m_pulso);
+    m_eventoIndex++;
+}
+
 double LineaMusical::samplearEnvolvente(double tiempo, double duracionTotal)
 {
     double amplitud = 0.0;
@@ -213,9 +222,32 @@ double LineaMusical::samplearEnvolvente(double tiempo, double duracionTotal)
     return amplitud;
 }
 
-void LineaMusical::producirRaw(string nombre)
+double LineaMusical::samplear(double tiempo, bool debug=false)
+{
+    double t = tiempo - m_eventoInicio;
+    if (t >= eventoActual()->duracion(m_pulso)){
+        cout << "====================================================" << endl;
+        cout << "Pasando de evento " << tiempo << " " << m_eventoInicio << " " << eventoActual()->duracion(m_pulso) << endl;
+        proximoEvento(tiempo);
+    }
+
+    if (terminado())
+        return 0.0;
+
+
+    double sample = eventoActual()->sample(t, m_armonicos, m_onda) * samplearEnvolvente(t, eventoActual()->duracion(m_pulso));
+
+    if (debug)
+        cout << "t: " << t << "  nota: " << eventoActual()->sample(t, m_armonicos, m_onda) << "  envolvente: " << samplearEnvolvente(t, eventoActual()->duracion(m_pulso)) << "  sample: " << sample << '\n';
+
+    return sample;
+}
+
+
+void Cancion::producirRaw(string nombre)
 {
     const int bitrate = 44100;
+    const double step = 1.0 / double(bitrate);
 
     ofstream archivo;
     archivo.open(nombre, ios::binary);
@@ -225,23 +257,56 @@ void LineaMusical::producirRaw(string nombre)
         return;
     }
 
-    double step = 1.0 / double(bitrate);
-    int eventoIndex = 0;
+    vector<LineaMusical> activos = m_canales;
+    for (auto &canal : activos)
+        canal.principio();
+
     double sample = 0.0;
     double t = 0.0;
+    int n = 0;
 
-    while (eventoIndex < m_eventos.size())
+    while (not activos.empty())
     {
-        sample = m_eventos[eventoIndex]->sample(t, m_armonicos, m_onda) * samplearEnvolvente(t, m_eventos[eventoIndex]->duracion(m_pulso));
+        sample = 0.0;
+        for (auto &canal : activos)
+            sample += canal.samplear(t, (n % 1000 == 0));
+
+        sample /= activos.size();
+
+        activos.erase(remove_if(activos.begin(), activos.end(), [](LineaMusical x)
+                                { if(x.terminado())
+                                    cout << "Borro un canal terminado " << endl; 
+                                return x.terminado(); }), activos.end());
+        
         archivo.write((char *)&sample, sizeof(double));
         t += step;
-
-        if (t >= m_eventos[eventoIndex]->duracion(m_pulso))
-        {
-            t -= m_eventos[eventoIndex]->duracion(m_pulso);
-            eventoIndex++;
-        }
+        n++;
     }
-
-    archivo.close();
 }
+
+// void LineaMusical::producirRaw(string nombre)
+// {
+//     const int bitrate = 44100;
+//     double step = 1.0 / double(bitrate);
+
+//     ofstream archivo;
+//     archivo.open(nombre, ios::binary);
+//     if (!archivo)
+//     {
+//         cerr << "No se pudo abrir el archivo " << nombre << endl;
+//         return;
+//     }
+
+//     principio();
+//     double sample = 0.0;
+//     double t = 0.0;
+
+//     while (not terminado())
+//     {
+//         sample = samplear(t);
+//         archivo.write((char *)&sample, sizeof(double));
+//         t += step;
+//     }
+
+//     archivo.close();
+// }
