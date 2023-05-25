@@ -17,9 +17,9 @@ public:
     }
 };
 
-class Harmonica : public LineaMusical{
+class Tecladito : public LineaMusical{
 public:
-    Harmonica(vector<Evento *> eventos) : LineaMusical(eventos)
+    Tecladito(vector<Evento *> eventos) : LineaMusical(eventos)
     {
         m_envolvente.tiempoAtaque = 0.07;
         m_envolvente.tiempoDecaer = 0.15;

@@ -177,9 +177,57 @@ vector<Evento *> megalovania()
     };
 }
 
+vector<Evento*> amelie_izq() {
+    vector<Evento*> vuelta {
+        new Octava(Nota(Cifrado::E, 3, Figura::Corchea)),
+        new Nota(Cifrado::B, 4, Figura::Corchea),
+        new Power(Nota(Cifrado::G, 3, Figura::Corchea)),
+        new Nota(Cifrado::B, 4, Figura::Corchea),
+        new Octava(Nota(Cifrado::E, 3, Figura::Corchea)),
+        new Nota(Cifrado::B, 4, Figura::Corchea),
+        new Power(Nota(Cifrado::G, 3, Figura::Corchea)),
+        new Nota(Cifrado::B, 4, Figura::Corchea),
+
+        new Octava(Nota(Cifrado::D, 3, Figura::Corchea)),
+        new Nota(Cifrado::B, 4, Figura::Corchea),
+        new Power(Nota(Cifrado::G, 3, Figura::Corchea)),
+        new Nota(Cifrado::B, 4, Figura::Corchea),
+        new Octava(Nota(Cifrado::D, 3, Figura::Corchea)),
+        new Nota(Cifrado::B, 4, Figura::Corchea),
+        new Power(Nota(Cifrado::G, 3, Figura::Corchea)),
+        new Nota(Cifrado::B, 4, Figura::Corchea),
+
+        new Octava(Nota(Cifrado::D, 3, Figura::Corchea)),
+        new Nota(Cifrado::B, 4, Figura::Corchea),
+        new Power(Nota(Cifrado::FS, 3, Figura::Corchea)),
+        new Nota(Cifrado::B, 4, Figura::Corchea),
+        new Octava(Nota(Cifrado::D, 3, Figura::Corchea)),
+        new Nota(Cifrado::B, 4, Figura::Corchea),
+        new Power(Nota(Cifrado::FS, 3, Figura::Corchea)),
+        new Nota(Cifrado::B, 4, Figura::Corchea),
+
+        new Octava(Nota(Cifrado::D, 3, Figura::Corchea)),
+        new Nota(Cifrado::B, 4, Figura::Corchea),
+        new Power(Nota(Cifrado::FS, 3, Figura::Corchea)),
+        new Nota(Cifrado::B, 4, Figura::Corchea),
+        new Octava(Nota(Cifrado::D, 3, Figura::Corchea)),
+        new Nota(Cifrado::B, 4, Figura::Corchea),
+        new Power(Nota(Cifrado::FS, 3, Figura::Corchea)),
+        new Nota(Cifrado::B, 4, Figura::Corchea),
+    };
+
+    vector<Evento*> melodia;
+    melodia.reserve(vuelta.size() * 4);
+    for (int i = 0; i < 4; i++) {
+        melodia.insert(melodia.end(), vuelta.begin(), vuelta.end());
+    }
+
+    return melodia;
+}
+
 int main()
 {
-    Sinte melodia { megalovania() };
+    Tecladito melodia { amelie_izq() };
     melodia.setearPulso(120);
 
     Cancion cancion {{melodia}};

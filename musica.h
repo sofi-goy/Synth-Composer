@@ -109,12 +109,32 @@ private:
 public:
     Acorde(Nota base, bool menor = false, bool septima = false, bool septimaMenor = false);
 
-    vector<Nota> notas();
+    virtual vector<Nota> notas();
     string nombre();
     Nota base() { return m_base; }
 
     double duracion(int pulso) override;
     double sample(double t, Armonicos armonicos, Onda onda) override;
+};
+
+class Octava : public Acorde
+{
+private:
+    Nota m_base;
+public:
+    Octava(Nota base) : Acorde(base) { m_base = base; };
+
+    vector<Nota> notas() override { return {m_base, m_base.octava()}; }
+};
+
+class Power : public Acorde
+{
+private:
+    Nota m_base;
+public:
+    Power(Nota base) : Acorde(base) { m_base = base; };
+
+    vector<Nota> notas() override { return {m_base, m_base.quinta()}; }
 };
 
 class LineaMusical
