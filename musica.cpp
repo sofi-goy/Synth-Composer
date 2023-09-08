@@ -1,4 +1,6 @@
 #include "musica.h"
+#include "efectos.h"
+
 #include <math.h>
 #include <iostream>
 #include <fstream>
@@ -318,6 +320,7 @@ void Cancion::producirWave(string nombre) {
     archivo.set_channel_number(1);
 
     auto content = producirSamples();
-    cout << "Sampleado!" << content[200] << endl;
+    content = suavizar(content, 10);
+
     archivo.Write(content);
 }
