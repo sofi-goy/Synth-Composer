@@ -1,8 +1,8 @@
 synth: demo.cpp musica.cpp musica.h instrumentos.h
-	g++ demo.cpp musica.cpp -o synth -L. -lwave
+	g++ demo.cpp musica.cpp -o synth -L wave/ -lwave
 
 debug: demo.cpp musica.cpp musica.h instrumentos.h
-	g++ -g demo.cpp musica.cpp -o synth -L. -lwave
+	g++ -g demo.cpp musica.cpp -o synth -L wave/ -lwave
 	
 run: synth
-	./synth && ffplay -showmode 1 music.wav
+	./synth && ffplay music.wav

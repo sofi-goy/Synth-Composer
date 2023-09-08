@@ -24,8 +24,12 @@ Para probarlo (en Linux), hay que ejecutar el comando
  ## TODO
 
 - Implementar instrumentos básicos (piano, sinte, percusión, guitarra, bajo, cuerdas, saxo)
+    Para esto se pueden estudiar samples de instrumentos reales con espectrogramas y cosas.
 - ~~Usar distintos tipos de ondas (cuadradas, triangulares, serrucho) para emular consolas retro~~
 - Implementar ruido, capaz con Perlin?
 - ~~Permitir mayor personalización de los armónicos~~
-- Producir audios en formato WAV
+- ~~Producir audios en formato WAV~~
 - Leer formato WAV, y permitir samplear grabaciones
+- Implementar LUFS (Loudness Units Full Scale) para normalizar el volumen
+- Aplicar un suavizado a la señal para evitar chasquidos
+- Implementar efectos de sonido (reverb, delay, chorus, flanger, phaser, etc)

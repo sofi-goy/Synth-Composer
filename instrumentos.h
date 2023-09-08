@@ -2,6 +2,7 @@
 
 #include "musica.h"
 
+// Roto porque la envolvente dura mucho
 class Siku : public LineaMusical
 {
 public:
@@ -37,9 +38,9 @@ class Sinte : public LineaMusical
 public:
     Sinte(vector<Evento *> eventos) : LineaMusical(eventos)
     {
-        m_envolvente.tiempoAtaque = 0.1;
-        m_envolvente.tiempoDecaer = 0.1;
-        m_envolvente.tiempoSoltar = 0.2;
+        m_envolvente.tiempoAtaque = 0.05;
+        m_envolvente.tiempoDecaer = 0.5;
+        m_envolvente.tiempoSoltar = 0.05;
         m_envolvente.nivelSostener = 0.7;
 
         m_armonicos = {};

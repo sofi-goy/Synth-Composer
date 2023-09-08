@@ -1,4 +1,6 @@
 .vscode/
 *.bin
+*.wav
 synth
 .gdb_history
+**/.venv/

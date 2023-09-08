@@ -196,30 +196,40 @@ void LineaMusical::actualizarDuracion()
 void LineaMusical::proximoEvento(double tiempo)
 {
     // cout << "Terminé un evento de duración " << eventoActual()->m_figura << endl;
-    m_eventoInicio += eventoActual()->duracion(m_pulso);
+    // m_eventoInicio += eventoActual()->duracion(m_pulso);
+    m_eventoInicio = tiempo;
     m_eventoIndex++;
+}
+
+double samplearAux(double tiempo, Envolvente envolvente){
+    double amplitud = 0.0;
+
+    if (tiempo < 0)
+        amplitud = 0.0;
+    // Ataque
+    else if (tiempo <= envolvente.tiempoAtaque)
+        amplitud = (tiempo / envolvente.tiempoAtaque) * envolvente.nivelAtaque;
+
+    // Decaer
+    else if (tiempo <= envolvente.tiempoAtaque + envolvente.tiempoDecaer)
+        amplitud = ((tiempo - envolvente.tiempoAtaque) / envolvente.tiempoDecaer) * (envolvente.nivelSostener - envolvente.nivelAtaque) + envolvente.nivelAtaque;
+
+    // Sostener
+    else
+        amplitud = envolvente.nivelSostener;
+
+    return amplitud;
 }
 
 double LineaMusical::samplearEnvolvente(double tiempo, double duracionTotal)
 {
     double amplitud = 0.0;
 
-    // Ataque
-    if (tiempo <= m_envolvente.tiempoAtaque)
-        amplitud = (tiempo / m_envolvente.tiempoAtaque) * m_envolvente.nivelAtaque;
-    // Decaer
-    else if (tiempo > m_envolvente.tiempoAtaque && tiempo <= m_envolvente.tiempoAtaque + m_envolvente.tiempoDecaer)
-        amplitud = ((tiempo - m_envolvente.tiempoAtaque) / m_envolvente.tiempoDecaer) * (m_envolvente.nivelSostener - m_envolvente.nivelAtaque) + m_envolvente.nivelAtaque;
-    // Sostener
-    else if (tiempo <= duracionTotal - m_envolvente.tiempoSoltar)
-        amplitud = m_envolvente.nivelSostener;
-    // Soltar
-    else if (tiempo <= duracionTotal)
-        amplitud = (1.0 - (tiempo - (duracionTotal - m_envolvente.tiempoSoltar)) / m_envolvente.tiempoSoltar) * m_envolvente.nivelSostener;
-
-    // Descartar el final del Soltar
-    if (amplitud < 0.0005)
-        amplitud = 0.0;
+    double soltar = duracionTotal - m_envolvente.tiempoSoltar;
+    if (tiempo < soltar)
+        amplitud = samplearAux(tiempo, m_envolvente);
+    else
+        amplitud = samplearAux(soltar, m_envolvente) * (1 - (tiempo-soltar)/m_envolvente.tiempoSoltar);
 
     return amplitud;
 }
@@ -250,32 +260,28 @@ vector<float> Cancion::producirSamples()
     const int bitrate = 44100;
     const double step = 1.0 / double(bitrate);
 
-    vector<LineaMusical> activos = m_canales;
-    for (auto &canal : activos)
-        canal.principio();
-
     double sample = 0.0;
     double t = 0.0;
     int n = 0;
-    auto samples = vector<float>();
+    
+    // La duracion total es el maximo de las duraciones de los canales
+    double duracionTotal = 0.0;
+    for (auto &canal : m_canales){
+        canal.principio();
+        duracionTotal = max(duracionTotal, canal.duracion());
+    }
 
-    while (not activos.empty())
+    int N_samples = ceil(duracionTotal * bitrate);
+    auto samples = vector<float>(N_samples);
+
+    for (int i = 0; i < N_samples; i++)
     {
         sample = 0.0;
-        for (auto &canal : activos)
+        for (auto &canal : m_canales)
             sample += canal.samplear(t);
 
-        sample /= activos.size();
-
-        activos.erase(remove_if(activos.begin(), activos.end(), [](LineaMusical x)
-                                { if(x.terminado())
-                                    cout << "Borro un canal terminado " << endl; 
-                                return x.terminado(); }),
-                      activos.end());
-
-        samples.push_back((float) sample);
+        samples[i] = (float) sample;
         t += step;
-        n++;
     }
 
     cout << "Terminé de samplear la canción!" << endl;
@@ -293,6 +299,9 @@ void Cancion::producirRaw(string nombre)
         return;
     }
 
+    auto content = producirSamples();
+    archivo.write((char *)&content[0], content.size() * sizeof(float));
+    archivo.close();
 }
 
 void Cancion::producirWave(string nombre) {
@@ -309,5 +318,6 @@ void Cancion::producirWave(string nombre) {
     archivo.set_channel_number(1);
 
     auto content = producirSamples();
+    cout << "Sampleado!" << content[200] << endl;
     archivo.Write(content);
 }
